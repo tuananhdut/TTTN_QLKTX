@@ -7,7 +7,7 @@ import { env } from '../config/environment.js';
 import clientRedis from '../config/redis.js'
 
 const generrateToken = (user) => {
-    return jwt.sign({ id: user.id, username: user.username }, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES })
+    return jwt.sign(user, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES })
 }
 
 export const verifyToken = async (token) => {
@@ -28,27 +28,13 @@ export const refeshToken = async (token) => {
     }
 }
 
-export const register = async (username, password) => {
-    // check if user already exists
-    const user = await db.User.findOne({ where: { username: username } })
-    if (user) {
-        throw new ApiError(StatusCodes.BAD_REQUEST, "User already exists")
-    }
-    // hash password
-    const hashPass = await hashPassword(password)
 
-    // create new user
-    const newUser = await db.User.create({
-        username: username,
-        password: hashPass,
-    })
-    return { id: newUser.id, username: newUser.username, role: newUser.role }
-}
-
-export const login = async (username, password) => {
+export const login = async (email, password) => {
     console.log("Jwt", env.JWT_SECRET)
     // check if user exists
-    const user = await db.User.findOne({ where: { username: username } })
+    const user = await db.User.findOne({
+        where: { email: email }
+    })
     if (!user) {
         throw new ApiError(StatusCodes.NOT_FOUND, "User not found")
     }
@@ -59,17 +45,37 @@ export const login = async (username, password) => {
         throw new ApiError(StatusCodes.UNAUTHORIZED, "Password is incorrect")
     }
 
+    // remove password from user object
+    const userData = user.toJSON();
+    delete userData.password;
+
     // generate token
-    const token = generrateToken(user)
+    const token = generrateToken(userData)
 
     return {
-        user: { id: user.id, username: user.username },
+        user: userData,
         token: { accessToken: token, expiresIn: env.JWT_EXPIRES }
     }
 }
 
 export const logout = async (token) => {
-    // Thêm token vào blacklist
+    // Thêm token vào 
     await clientRedis.set(`blacklist:${token}`, 'logout', 'EX', 86400)
     return true
 }
+
+export const getUserData = async (userId) => {
+    const user = await db.User.findByPk(userId, {
+        attributes: [
+            "id", "fullname", "email", "phone", "birthdate",
+            "role", "citizen_id", "class", "avatar"
+        ],
+        raw: true
+    });
+
+    if (!user) {
+        throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
+    }
+
+    return user;
+};

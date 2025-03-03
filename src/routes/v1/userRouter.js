@@ -1,15 +1,16 @@
 import express from 'express'
 import { getAllUsers, getUserById, updateUser, deleteUser } from '~/controllers/userControler'
 import { authMiddleware } from '~/middlewares/authMiddleware'
+import { validateUpdateUser } from '~/validations/userValidation'
 
 const router = express.Router()
 
-router.get('/users', authMiddleware, getAllUsers)
+router.get('/', authMiddleware, getAllUsers)
 
-router.get('/users/:id', authMiddleware, getUserById)
+router.get('/:id', authMiddleware, getUserById)
 
-router.put('/users/:id', authMiddleware, updateUser)
+router.put('/:id', validateUpdateUser, authMiddleware, updateUser)
 
-router.delete('/users/:id', authMiddleware, deleteUser)
+router.delete('/:id', authMiddleware, deleteUser)
 
 export default router

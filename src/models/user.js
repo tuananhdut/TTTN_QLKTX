@@ -14,10 +14,29 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   User.init({
-    username: {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true
+    },
+    fullname: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
+    },
+    phone: {
+      type: DataTypes.STRING(15),
+      allowNull: true,
+      unique: true
+    },
+    birthdate: {
+      type: DataTypes.DATEONLY,
+      allowNull: true
     },
     password: {
       type: DataTypes.STRING,
@@ -26,11 +45,27 @@ module.exports = (sequelize, DataTypes) => {
     role: {
       type: DataTypes.ENUM('user', 'admin'),
       allowNull: false,
-      defaultValue: "user" // Giá trị mặc định là 'user'
+      defaultValue: 'user'
     },
-  }, {
-    sequelize,
-    modelName: 'User',
-  });
+    citizen_id: {
+      type: DataTypes.STRING(12),
+      allowNull: true,
+      unique: true
+    },
+    class: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
+    avatar: {
+      type: DataTypes.STRING,
+      allowNull: true
+    }
+  },
+    {
+      sequelize,
+      modelName: 'User',
+      tableName: 'Users',
+      timestamps: true
+    });
   return User;
 };

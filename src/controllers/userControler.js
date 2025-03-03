@@ -27,7 +27,7 @@ export const getUserById = async (req, res, next) => {
 export const updateUser = async (req, res, next) => {
     try {
         const user = await updateById(req.params.id, req.body);
-        ApiSuccess(res, { id: user.id, username: user.username, role: user.role }, "User updated successfully");
+        ApiSuccess(res, user, "User updated successfully");
     } catch (error) {
         next(error);
     }

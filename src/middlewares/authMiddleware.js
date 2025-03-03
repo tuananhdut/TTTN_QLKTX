@@ -9,7 +9,7 @@ export const authMiddleware = async (req, res, next) => {
         // 1️⃣ Lấy token từ header
         const token = req.headers.authorization?.split(" ")[1];
         if (!token) {
-            return next(new ApiError(StatusCodes.UNAUTHORIZED, "You do not have permission to access this resource."));
+            return next(new ApiError(StatusCodes.UNAUTHORIZED, "Token is required."));
         }
 
         // 2️⃣ Kiểm tra token có bị thu hồi không

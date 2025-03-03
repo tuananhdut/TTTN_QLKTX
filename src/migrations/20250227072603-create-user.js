@@ -9,10 +9,23 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
+      fullname: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      email: {
         type: Sequelize.STRING,
         unique: true,
         allowNull: false
+      },
+      phone: {
+        type: Sequelize.STRING(15),
+        unique: true,
+        allowNull: true
+      },
+      birthdate: {
+        type: Sequelize.DATEONLY, // Lưu ngày sinh
+        allowNull: true
       },
       password: {
         type: Sequelize.STRING,
@@ -21,7 +34,20 @@ module.exports = {
       role: {
         type: Sequelize.ENUM('user', 'admin'),
         allowNull: false,
-        defaultValue: "user" // Giá trị mặc định là 'user'
+        defaultValue: 'user'
+      },
+      citizen_id: {
+        type: Sequelize.STRING(12), // Căn cước công dân (CCCD)
+        unique: true,
+        allowNull: true
+      },
+      class: {
+        type: Sequelize.STRING(50), // Lớp của sinh viên
+        allowNull: true
+      },
+      avatar: {
+        type: Sequelize.STRING, // Đường dẫn ảnh đại diện
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
