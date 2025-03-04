@@ -30,3 +30,13 @@ export const authMiddleware = async (req, res, next) => {
         return next(new ApiError(StatusCodes.UNAUTHORIZED, "Invalid token"));
     }
 };
+
+
+export const authorize = (roles = []) => {
+    return (req, res, next) => {
+        if (!roles.includes(req.user.role)) {
+            return next(new ApiError(StatusCodes.FORBIDDEN, "Forbidden: You do not have access"));
+        }
+        next();
+    };
+};
