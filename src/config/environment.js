@@ -12,9 +12,6 @@ export const env = {
     DB_NAME: process.env.DB_NAME || 'testdb',
     DB_PORT: process.env.DB_PORT || 3306,
 
-    // environment variables mongodb
-    MONGO_URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/express-mongo',
-
     // environment variables jwt
     JWT_SECRET: process.env.JWT_SECRET_KEY,
     JWT_EXPIRES: process.env.JWT_EXPIRES || '1d',
