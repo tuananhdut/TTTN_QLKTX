@@ -1,61 +1,46 @@
 'use strict';
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("bill_items", {
+    await queryInterface.createTable('contracts', {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
       },
-      item_name: {
-        type: Sequelize.STRING,
+      start_date: {
+        type: Sequelize.DATEONLY,
         allowNull: false,
       },
-      quantity: {
+      end_date: {
+        type: Sequelize.DATEONLY,
+        allowNull: false,
+      },
+      room_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        defaultValue: 1,
-      },
-      unit_price: {
-        type: Sequelize.DECIMAL(10, 2),
-        allowNull: false,
-      },
-      total_price: {
-        type: Sequelize.DECIMAL(10, 2),
-        allowNull: false,
-      },
-      bill_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "monthly_bills",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
+        references: { model: "rooms", key: "id" }, // Liên kết tới bảng rooms
         onDelete: "CASCADE",
       },
-      createdAt: {
+      status: {
+        type: Sequelize.ENUM("active", "expired", "canceled"),
+        defaultValue: "active",
+        allowNull: false,
+      },
+      created_at: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
-      updatedAt: {
+      updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"),
       },
     });
   },
-
   async down(queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
+    await queryInterface.dropTable('contracts');
   }
 };

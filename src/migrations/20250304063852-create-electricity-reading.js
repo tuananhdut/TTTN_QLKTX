@@ -1,9 +1,8 @@
 'use strict';
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("water_readings", {
+    await queryInterface.createTable('electricityReadings', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -13,12 +12,12 @@ module.exports = {
       previous_reading: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        comment: "Chỉ số nước tháng trước",
+        comment: "Chỉ số điện tháng trước",
       },
       current_reading: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        comment: "Chỉ số nước tháng này",
+        comment: "Chỉ số điện tháng này",
       },
       record_month: {
         type: Sequelize.DATEONLY,
@@ -28,7 +27,7 @@ module.exports = {
       unit_price: {
         type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
-        comment: "Giá nước trên mỗi m³",
+        comment: "Giá điện trên mỗi kWh",
       },
       room_id: {
         type: Sequelize.INTEGER,
@@ -53,13 +52,7 @@ module.exports = {
       },
     });
   },
-
   async down(queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
+    await queryInterface.dropTable('electricityReadings');
   }
 };

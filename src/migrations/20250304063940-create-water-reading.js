@@ -1,47 +1,39 @@
 'use strict';
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("monthly_bills", {
+    await queryInterface.createTable('waterReadings', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
       },
-      student_id: {
+      previous_reading: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: "users", // Giả định bảng sinh viên là "users"
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-        comment: "ID của sinh viên",
+        comment: "Chỉ số nước tháng trước",
       },
-      bill_month: {
+      current_reading: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        comment: "Chỉ số nước tháng này",
+      },
+      record_month: {
         type: Sequelize.DATEONLY,
         allowNull: false,
-        comment: "Tháng lập hóa đơn (YYYY-MM)",
+        comment: "Tháng ghi nhận chỉ số (YYYY-MM)",
       },
-      total_amount: {
+      unit_price: {
         type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
-        comment: "Tổng số tiền phải thanh toán",
-      },
-      payment_status: {
-        type: Sequelize.ENUM("pending", "paid", "overdue"),
-        allowNull: false,
-        defaultValue: "pending",
-        comment: "Trạng thái thanh toán (chờ thanh toán, đã thanh toán, quá hạn)",
+        comment: "Giá nước trên mỗi m³",
       },
       room_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "rooms", // Giả định bảng phòng là "rooms"
+          model: "rooms", // Bảng rooms phải tồn tại trước
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -58,15 +50,9 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"),
       },
-    })
+    });
   },
-
   async down(queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
+    await queryInterface.dropTable('waterReadings');
   }
 };

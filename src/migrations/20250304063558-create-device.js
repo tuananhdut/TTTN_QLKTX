@@ -1,53 +1,58 @@
 'use strict';
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("contracts", {
+    await queryInterface.createTable('devices', {
       id: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+      },
+      name: {
+        type: Sequelize.STRING,
         allowNull: false,
       },
-      start_date: {
-        type: Sequelize.DATEONLY,
-        allowNull: false,
-      },
-      end_date: {
-        type: Sequelize.DATEONLY,
+      price: {
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
       },
       room_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: "rooms", key: "id" }, // Liên kết tới bảng rooms
-        onDelete: "CASCADE",
+        allowNull: true,
+        references: {
+          model: "rooms", // Bảng rooms đã tồn tại trước đó
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       status: {
-        type: Sequelize.ENUM("active", "expired", "canceled"),
-        defaultValue: "active",
+        type: Sequelize.ENUM("available", "in_use", "maintenance"),
         allowNull: false,
+        defaultValue: "available",
       },
-      created_at: {
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      image: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
-      updated_at: {
+      updatedAt: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"),
       },
     });
   },
-
   async down(queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
+    await queryInterface.dropTable('devices');
   }
 };
