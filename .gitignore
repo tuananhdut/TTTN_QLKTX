@@ -13,6 +13,7 @@
 
 # databa
 /src/config/database.json
+ManageService.js
 # misc
 .DS_Store
 .env.local

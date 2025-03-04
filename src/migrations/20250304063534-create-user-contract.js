@@ -19,7 +19,7 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      contractId: { // Liên kết với bảng contracts
+      contractId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {

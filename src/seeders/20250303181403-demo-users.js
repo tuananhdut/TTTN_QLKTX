@@ -1,8 +1,8 @@
 'use strict';
 
 
-import { hashedPassword } from '../utils/passwordUtil'
-// const bcrypt = require('bcrypt');
+// import { hashedPassword } from '../utils/passwordUtil'
+const bcrypt = require('bcrypt');
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -10,8 +10,8 @@ module.exports = {
 
     await queryInterface.bulkInsert('Users', [
       {
-        fullname: 'Nguyễn Văn A',
-        email: 'test@example.com',
+        fullname: 'user',
+        email: 'user@example.com',
         phone: '0901234567',
         birthdate: '2000-01-15',
         password: hashedPassword,
@@ -23,8 +23,8 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        fullname: 'Trần Thị B',
-        email: 'tranthib@example.com',
+        fullname: 'admin',
+        email: 'admin@example.com',
         phone: '0912345678',
         birthdate: '1999-05-22',
         password: hashedPassword,
