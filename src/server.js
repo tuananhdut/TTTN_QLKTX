@@ -5,6 +5,7 @@ import { connectDB } from './config/database'
 import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware'
 import clientRedis from './config/redis'
 import passport from './config/passport'
+import 'dotenv/config'
 
 const START_SERVER = () => {
   const app = express()
@@ -20,10 +21,18 @@ const START_SERVER = () => {
   // xử lý lỗi tập trung
   app.use(errorHandlingMiddleware)
 
-  app.listen(env.PORT, env.HOST, () => {
-    // eslint-disable-next-line no-console
-    console.log(`I am running at http://${env.HOST}:${env.PORT}/`)
-  })
+  // support render.com
+  if (env.BUILD_MODE === 'production') {
+    app.listen(process.env.PORT, () => {
+      // eslint-disable-next-line no-console
+      console.log(`production:  ${process.env.PORT}/`)
+    })
+  } else {
+    app.listen(env.PORT, env.HOST, () => {
+      // eslint-disable-next-line no-console
+      console.log(`I am running at http://${env.HOST}:${env.PORT}/`)
+    })
+  }
 }
 
 clientRedis
