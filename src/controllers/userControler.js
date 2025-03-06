@@ -29,7 +29,7 @@ export const getAllUsers = async (req, res, next) => {
     }
 };
 
-
+// 30 - 2tr6 
 export const getUserByToken = async (req, res, next) => {
     try {
         const user = await getById(req.user.id);
@@ -90,3 +90,4 @@ export const logoutUser = async (req, res, next) => {
         next(error)
     }
 }
+

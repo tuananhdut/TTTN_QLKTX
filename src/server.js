@@ -6,13 +6,15 @@ import { errorHandlingMiddleware } from './middlewares/errorHandlingMiddleware'
 import clientRedis from './config/redis'
 import passport from './config/passport'
 import 'dotenv/config'
+import path from "path";
 
 const START_SERVER = () => {
   const app = express()
 
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
-  app.use(express.static('public'))
+  app.use("/public", express.static(path.join(__dirname, "..", "public")));
+
 
   app.use(passport.initialize())
 
