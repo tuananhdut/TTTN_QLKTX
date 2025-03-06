@@ -51,10 +51,14 @@ exports.getAllRooms = async (req, res, next) => {
 };
 
 exports.getImageRoom = async (req, res, next) => {
-    // console.log(req.params.imageName)
-    const filename = req.params.filename
-    if (!filename) throw new ApiError(StatusCodes.NOT_FOUND, "filename is required")
-    const data = await ImageService.getImage(filename)
-    res.setHeader("Content-Type", data.ContentType);
-    res.send(data.Body);
+    try {
+        // console.log(req.params.imageName)
+        const filename = req.params.filename
+        if (!filename) throw new ApiError(StatusCodes.NOT_FOUND, "filename is required")
+        const data = await ImageService.getImage(filename)
+        res.setHeader("Content-Type", data.ContentType);
+        res.send(data.Body);
+    } catch (error) {
+        next(error)
+    }
 }

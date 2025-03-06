@@ -7,9 +7,12 @@ import clientRedis from './config/redis'
 import passport from './config/passport'
 import 'dotenv/config'
 import path from "path";
+import cors from 'cors';
 
 const START_SERVER = () => {
   const app = express()
+
+  app.use(cors());
 
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
