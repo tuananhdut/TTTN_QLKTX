@@ -23,6 +23,10 @@ module.exports = {
         allowNull: false,
         defaultValue: "available",
       },
+      image: {
+        type: Sequelize.STRING,  // Lưu URL hoặc đường dẫn ảnh
+        allowNull: true,         // Có thể để trống nếu phòng chưa có ảnh
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

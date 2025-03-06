@@ -1,18 +1,14 @@
 import express from 'express'
-import { getRoomByIDRoom, getAllRooms } from '../../controllers/roomController'
-import { uploadImage } from '../../utils/uploadImageUtil'
-// import { getImage } from '~/utils/getImageUtil'
+import RoomController from '../../controllers/roomController'
 import upload from '~/middlewares/uploadMiddleware'
+import { authMiddleware, authorize } from '~/middlewares/authMiddleware'
 
 const router = express.Router()
 
-// router.get('/:filename', getImage)
+router.get('/:id', RoomController.getRoomByIDRoom)
 
-router.get('/:id', getRoomByIDRoom)
+router.get('/', RoomController.getAllRooms)
 
-router.get('/', getAllRooms)
-
-router.post('/uploadimage', upload.single("file"), uploadImage)
-
+router.post('/', authMiddleware, authorize(["admin"]), upload.single("file"), RoomController.createRoom)
 
 export default router

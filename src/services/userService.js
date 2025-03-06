@@ -6,8 +6,7 @@ import jwt from 'jsonwebtoken'
 import { env } from '../config/environment.js';
 import clientRedis from '../config/redis.js'
 
-const changePassword = async (userId, oldPassword, newPassword, confirmPassword) => {
-    console.log('check')
+exports.changePassword = async (userId, oldPassword, newPassword, confirmPassword) => {
     // Kiểm tra xác nhận mật khẩu mới
     if (newPassword !== confirmPassword) {
         throw new ApiError(StatusCodes.BAD_REQUEST, "Confirm password does not match new password");
@@ -38,71 +37,53 @@ const changePassword = async (userId, oldPassword, newPassword, confirmPassword)
     return null
 };
 
-const getAll = async (page, limit) => {
-    try {
-        let offset = (page - 1) * limit;
-        const { rows, count } = await db.User.findAndCountAll({
-            attributes: { exclude: ['password'] },
-            limit: limit,
-            offset: offset
-        });
+exports.getAll = async (page, limit) => {
+    let offset = (page - 1) * limit;
+    const { rows, count } = await db.User.findAndCountAll({
+        attributes: { exclude: ['password'] },
+        limit: limit,
+        offset: offset
+    });
 
-        return { rows, count };
-    } catch (error) {
-        throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, "Error retrieving users: " + error.message);
-    }
+    return { rows, count };
 }
 
-const getById = async (id) => {
-    try {
-        const user = await db.User.findByPk(
-            id, {
-            attributes: { exclude: ["password"] }
-        });
-        return user;
-    } catch (error) {
-        throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, "Error retrieving user: " + error.message);
-    }
+exports.getById = async (id) => {
+    const user = await db.User.findByPk(
+        id, {
+        attributes: { exclude: ["password"] }
+    });
+    if (!user) throw new ApiError(StatusCodes.NOT_FOUND, "User not found")
+    return user;
 }
 
-const updateById = async (id, data) => {
-    try {
-        const user = await db.User.findByPk(id);
-        if (!user) {
-            throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
-        }
-
-        // Remove password from data
-        if ("password" in data) {
-            delete data.password;
-        }
-
-        // Update user
-        const userUpdate = await user.update(data);
-
-        // Remove password from userUpdate
-        delete userUpdate.dataValues.password;
-
-        return userUpdate;
-    } catch (error) {
-        if (error instanceof ApiError) {
-            throw error;
-        }
-        throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, "Error updating user: " + error.message);
+exports.updateById = async (id, data) => {
+    const user = await db.User.findByPk(id);
+    if (!user) {
+        throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
     }
+
+    // Remove password from data
+    if ("password" in data) {
+        delete data.password;
+    }
+
+    // Update user
+    const userUpdate = await user.update(data);
+
+    // Remove password from userUpdate
+    delete userUpdate.dataValues.password;
+
+    return userUpdate;
 }
 
-const deleteById = async (id) => {
-    try {
-        const user = await db.User.findByPk(id);
-        if (!user) {
-            throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
-        }
-        await user.destroy();
-        return user;
-    } catch (error) {
-        throw error;
+exports.deleteById = async (id) => {
+    const user = await db.User.findByPk(id);
+    if (!user) {
+        throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
     }
+    await user.destroy();
+    return user;
 }
 
 
@@ -110,7 +91,7 @@ const generrateToken = (user) => {
     return jwt.sign(user, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES })
 }
 
-export const verifyToken = async (token) => {
+const verifyToken = async (token) => {
     try {
         return jwt.verify(token, env.JWT_SECRET)
     } catch (error) {
@@ -129,9 +110,7 @@ const refeshToken = async (token) => {
 }
 
 
-const login = async (email, password) => {
-    console.log('check')
-
+exports.login = async (email, password) => {
     // check if user exists
     const user = await db.User.findOne({
         where: { email: email }
@@ -159,13 +138,13 @@ const login = async (email, password) => {
     }
 }
 
-const logout = async (token) => {
+exports.logout = async (token) => {
     // Thêm token vào 
     await clientRedis.set(`blacklist:${token}`, 'logout', 'EX', 86400)
     return true
 }
 
-const getUserData = async (userId) => {
+exports.getUserData = async (userId) => {
     const user = await db.User.findByPk(userId, {
         attributes: [
             "id", "fullname", "email", "phone", "birthdate",
@@ -181,5 +160,3 @@ const getUserData = async (userId) => {
     return user;
 };
 
-
-module.exports = { getAll, getById, updateById, deleteById, login, getUserData, logout, refeshToken, changePassword };

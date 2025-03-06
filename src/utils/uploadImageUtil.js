@@ -27,13 +27,12 @@ exports.uploadImage = async (file) => {
         const randomString = generateRandomString(6);
         const newFileName = `${timestamp}_${randomString}_${originalName}${fileExtension}`;
 
-        console.log(newFileName)
 
         const params = {
             Bucket: process.env.S3_BUCKET,
             Key: `images/${newFileName}`,
-            Body: req.file.buffer,
-            ContentType: req.file.mimetype,
+            Body: file.buffer,
+            ContentType: file.mimetype,
         };
 
         const uploadResult = await s3.upload(params).promise();
@@ -43,6 +42,6 @@ exports.uploadImage = async (file) => {
         }
         return newFileName
     } catch (error) {
-        res.status(500).send(error.message);
+        return error
     }
 };

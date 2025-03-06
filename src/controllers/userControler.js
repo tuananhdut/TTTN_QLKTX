@@ -1,93 +1,53 @@
 import { StatusCodes } from "http-status-codes";
-import { getAll, getById, updateById, deleteById, login, logout, changePassword } from "~/services/userService";
+import UserService from "~/services/userService";
 import ApiSuccess from "~/utils/ApiSuccess";
 import ApiError from "~/utils/ApiError";
 
-export const changePasssUser = async (req, res, next) => {
-    try {
-        console.log('check')
-        const userId = req.user.id;
+exports.changePasssUser = async (req, res, next) => {
+    const userId = req.user.id;
 
-        const { oldPassword, newPassword, confirmPassword } = req.body;
+    const { oldPassword, newPassword, confirmPassword } = req.body;
 
-        const result = await changePassword(userId, oldPassword, newPassword, confirmPassword);
-        ApiSuccess(res, null, "Password changed successfully")
-
-    } catch (error) {
-        return next(error);
-    }
+    const result = await UserService.changePassword(userId, oldPassword, newPassword, confirmPassword);
+    ApiSuccess(res, null, "Password changed successfully")
 }
 
-export const getAllUsers = async (req, res, next) => {
-    try {
-        let page = parseInt(req.query.page) || 1;
-        let limit = parseInt(req.query.limit) || 8;
-        const { rows, count } = await getAll(page, limit)
-        ApiSuccess(res, { page, limit, totalRecords: count, totalPages: Math.ceil(count / limit), data: rows }, "Users retrieved successfully");
-    } catch (error) {
-        next(error);
-    }
+exports.getAllUsers = async (req, res, next) => {
+    let page = parseInt(req.query.page) || 1;
+    let limit = parseInt(req.query.limit) || 8;
+    const { rows, count } = await UserService.getAll(page, limit)
+    ApiSuccess(res, { page, limit, totalRecords: count, totalPages: Math.ceil(count / limit), data: rows }, "Users retrieved successfully");
 };
 
-// 30 - 2tr6 
-export const getUserByToken = async (req, res, next) => {
-    try {
-        const user = await getById(req.user.id);
-        if (!user) {
-            return next(new ApiError(StatusCodes.NOT_FOUND, "User not found"));
-        }
-        ApiSuccess(res, user, "User retrieved successfully");
-    } catch (error) {
-        next(error);
-    }
+exports.getUserByToken = async (req, res, next) => {
+    const user = await UserService.getById(req.user.id);
+    ApiSuccess(res, user, "User retrieved successfully");
 }
 
-export const updateUser = async (req, res, next) => {
-    try {
-        const user = await updateById(req.params.id, req.body);
-        ApiSuccess(res, user, "User updated successfully");
-    } catch (error) {
-        next(error);
-    }
+exports.updateUser = async (req, res, next) => {
+    const user = await UserService.updateById(req.params.id, req.body);
+    ApiSuccess(res, user, "User updated successfully");
 }
 
-export const deleteUser = async (req, res, next) => {
-    try {
-        const user = await deleteById(req.params.id);
-        ApiSuccess(res, null, "User deleted successfully");
-    } catch (error) {
-        next(error);
-    }
+exports.deleteUser = async (req, res, next) => {
+    const user = await UserService.deleteById(req.params.id);
+    ApiSuccess(res, null, "User deleted successfully");
 }
 
 
 
-export const loginUser = async (req, res, next) => {
-    try {
-        const { email, password } = req.body
-
-        const user = await login(email, password)
-
-        ApiSuccess(res, user, "Login successfully", StatusCodes.OK)
-    } catch (error) {
-        next(error)
-    }
+exports.loginUser = async (req, res, next) => {
+    const { email, password } = req.body
+    const user = await UserService.login(email, password)
+    ApiSuccess(res, user, "Login successfully", StatusCodes.OK)
 }
 
-export const logoutUser = async (req, res, next) => {
-    try {
-        // Lấy token từ header
-        const token = req.headers.authorization?.split(" ")[1]; // Lấy token từ header
-
-        if (!token) {
-            throw new ApiError(StatusCodes.BAD_REQUEST, "Token is required");
-        }
-
-        // Thêm token vào blacklist
-        await logout(token);
-        ApiSuccess(res, null, "Logout successfully", StatusCodes.OK)
-    } catch (error) {
-        next(error)
+exports.logoutUser = async (req, res, next) => {
+    const token = req.headers.authorization?.split(" ")[1]; // Lấy token từ header
+    if (!token) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, "Token is required");
     }
+    await UserService.logout(token);
+    ApiSuccess(res, null, "Logout successfully", StatusCodes.OK)
 }
 

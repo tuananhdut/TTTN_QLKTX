@@ -40,6 +40,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: "available",
       },
+      image: {
+        type: DataTypes.STRING,
+        allowNull: true, // Có thể null nếu chưa có ảnh
+      },
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
