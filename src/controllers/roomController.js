@@ -2,7 +2,22 @@ import { getRoomById, getAll } from '../services/roomService'
 import ApiError from '~/utils/ApiError';
 import ApiSuccess from '~/utils/ApiSuccess';
 import { StatusCodes } from 'http-status-codes';
+import { uploadImage } from '~/middlewares/uploadAWSMiddleware';
 
+
+export const uploadImageRoom = async (req, res, next) => {
+    try {
+        if (!req.file) return res.status(400).send("No file uploaded");
+
+        const filename = uploadImage(req.file)
+
+        if ()
+
+            ApiSuccess(res, room, "Room retrieved successfully", StatusCodes.OK);
+    } catch (error) {
+        next(error);
+    }
+};
 
 export const getRoomByIDRoom = async (req, res, next) => {
     try {
