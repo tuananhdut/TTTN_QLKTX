@@ -8,9 +8,9 @@ export const env = {
     // environment variables mysql database
     DB_HOST: process.env.DB_HOST || 'localhost',
     DB_USER: process.env.DB_USER || 'root',
-    DB_PASS: process.env.DB_PASS || '',
-    DB_NAME: process.env.DB_NAME || 'testdb',
-    DB_PORT: process.env.DB_PORT || 3306,
+    DB_PASS: process.env.DB_PASS || '12345678',
+    DB_NAME: process.env.DB_NAME || 'qlktx',
+    DB_PORT: process.env.DB_PORT || 3309,
 
     // environment variables jwt
     JWT_SECRET: process.env.JWT_SECRET_KEY,
