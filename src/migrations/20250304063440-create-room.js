@@ -19,9 +19,9 @@ module.exports = {
         allowNull: false, // Giá phòng mỗi kỳ (4 tháng)
       },
       status: {
-        type: Sequelize.ENUM("available", "occupied", "maintenance"),
+        type: Sequelize.ENUM("not_filled", "full", "maintenance"),
         allowNull: false,
-        defaultValue: "available",
+        defaultValue: "not_filled",
       },
       image: {
         type: Sequelize.STRING,  // Lưu URL hoặc đường dẫn ảnh

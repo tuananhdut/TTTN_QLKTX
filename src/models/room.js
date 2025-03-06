@@ -36,9 +36,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false, // Giá phòng mỗi kỳ (4 tháng)
       },
       status: {
-        type: DataTypes.ENUM("available", "occupied", "maintenance"),
+        type: DataTypes.ENUM("not_filled", "full", "maintenance"), // chưa đủ người/ đủ người/ bảo trì
         allowNull: false,
-        defaultValue: "available",
+        defaultValue: "not_filled",
       },
       image: {
         type: DataTypes.STRING,

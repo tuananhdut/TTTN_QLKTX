@@ -3,6 +3,44 @@ import db from "../models/index";
 import { StatusCodes } from "http-status-codes";
 import { uploadImage } from "../utils/uploadImageUtil";
 import user from "~/models/user";
+import ImageService from './imageService'
+
+exports.updateRoom = async (id, file, data) => {
+    // kiểm tra id có tồn tại ?
+    const room = await db.Room.findByPk(id)
+    if (!room) throw new ApiError(StatusCodes.NOT_FOUND, "Room not fould")
+
+
+    // nếu image đã tồn tại nhưng trong req  ko có file nào upload thì dữ nguyên
+    // nếu req có thì xóa file cũ và update file mới
+    let filename = room.image
+    if (file) {
+        if (filename) {
+            await ImageService.deleteImage(filename)
+        }
+        filename = await uploadImage(file)
+    }
+
+    //kiểm tra name đã tồn tại chưa
+    const roomCheckName = await db.Room.findOne({
+        where: { name: data.name }
+    });
+    if (roomCheckName) throw new ApiError(StatusCodes.BAD_REQUEST, "Room name already exists")
+
+    //update
+    const updatedRoom = await db.Room.update({
+        name: data.name || room.name,
+        capacity: data.capacity || room.capacity,
+        price: data.price || room.price,
+        status: data.status || room.status,
+        image: filename, // Cập nhật ảnh nếu có ảnh mới
+    },
+        {
+            where: { id: id }// Điều kiện update
+        }
+    )
+    return updatedRoom
+}
 
 exports.createRoomService = async (file, data) => {
     // check room is required

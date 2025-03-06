@@ -6,6 +6,13 @@ import jwt from 'jsonwebtoken'
 import { env } from '../config/environment.js';
 import clientRedis from '../config/redis.js'
 
+
+exports.createUser = async (data) => {
+    // const user = await db.User.create({
+
+    // })
+}
+
 exports.changePassword = async (userId, oldPassword, newPassword, confirmPassword) => {
     // Kiểm tra xác nhận mật khẩu mới
     if (newPassword !== confirmPassword) {
@@ -139,7 +146,7 @@ exports.login = async (email, password) => {
 }
 
 exports.logout = async (token) => {
-    // Thêm token vào 
+    // Thêm token vào redis (black list)
     await clientRedis.set(`blacklist:${token}`, 'logout', 'EX', 86400)
     return true
 }

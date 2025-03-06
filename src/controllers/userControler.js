@@ -3,6 +3,12 @@ import UserService from "~/services/userService";
 import ApiSuccess from "~/utils/ApiSuccess";
 import ApiError from "~/utils/ApiError";
 
+exports.createUser = async (req, res, next) => {
+    // const data = req.body;
+    // const user = await UserService.createUser(data);
+    // ApiSuccess(res, null, "Password changed successfully")
+}
+
 exports.changePasssUser = async (req, res, next) => {
     const userId = req.user.id;
 

@@ -13,10 +13,12 @@ router.get('/', authMiddleware, authorize(["admin"]), UserController.getAllUsers
 
 router.get('/profile', authMiddleware, authorize(["user", "admin"]), UserController.getUserByToken) //done
 
-router.put('/:id', validateUpdateUser, authMiddleware, authorize(["user", "admin"]), UserController.updateUser)
+router.put('/:id', validateUpdateUser, authMiddleware, UserController.updateUser)
 
 router.delete('/:id', authMiddleware, authorize(["admin"]), UserController.deleteUser) // done
 
 router.put('/password', UserController.changePasssUser)
+
+// router.post('/', UserController.createUser)
 
 export default router

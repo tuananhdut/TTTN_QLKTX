@@ -5,10 +5,14 @@ import { authMiddleware, authorize } from '~/middlewares/authMiddleware'
 
 const router = express.Router()
 
+router.get('/image/:filename', RoomController.getImageRoom)
+
 router.get('/:id', RoomController.getRoomByIDRoom)
 
 router.get('/', RoomController.getAllRooms)
 
 router.post('/', authMiddleware, authorize(["admin"]), upload.single("file"), RoomController.createRoom)
+
+router.put('/:id', upload.single("image"), RoomController.updateRoom)
 
 export default router
