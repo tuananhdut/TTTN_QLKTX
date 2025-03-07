@@ -2,6 +2,7 @@ import express from 'express'
 import UserController from '~/controllers/userControler'
 import { authMiddleware, authorize } from '~/middlewares/authMiddleware'
 import { validateLogin, validateUpdateUser } from '~/validations/userValidation'
+import upload from '~/middlewares/uploadMiddleware'
 
 const router = express.Router()
 
@@ -13,7 +14,9 @@ router.get('/', authMiddleware, authorize(["admin"]), UserController.getAllUsers
 
 router.get('/profile', authMiddleware, authorize(["user", "admin"]), UserController.getUserByToken) //done
 
-router.put('/:id', validateUpdateUser, authMiddleware, UserController.updateUser)
+router.put('/update-profile', authMiddleware, authorize(["user"]), upload.single("avatar"), UserController.updateAccountUser) //done
+
+router.put('/update-user/:id', authMiddleware, authorize(["admin"]), upload.single("avatar"), UserController.updateAccountAdmin)
 
 router.delete('/:id', authMiddleware, authorize(["admin"]), UserController.deleteUser) // done
 

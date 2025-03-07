@@ -3,6 +3,20 @@ import UserService from "~/services/userService";
 import ApiSuccess from "~/utils/ApiSuccess";
 import ApiError from "~/utils/ApiError";
 
+exports.updateAccountAdmin = async (req, res, next) => {
+    try {
+        console.log(req.file)
+        const fileImage = req.file
+        const data = req.body
+        const id = req.params.id
+        const user = await UserService.userUpdate(id, fileImage, data);
+        ApiSuccess(res, true, "User updated successfully by Admin");
+    } catch (error) {
+        next(error)
+    }
+}
+
+
 exports.createUser = async (req, res, next) => {
     // const data = req.body;
     // const user = await UserService.createUser(data);
@@ -30,9 +44,16 @@ exports.getUserByToken = async (req, res, next) => {
     ApiSuccess(res, user, "User retrieved successfully");
 }
 
-exports.updateUser = async (req, res, next) => {
-    const user = await UserService.updateById(req.params.id, req.body);
-    ApiSuccess(res, user, "User updated successfully");
+exports.updateAccountUser = async (req, res, next) => {
+    try {
+        const fileImage = req.file
+        const data = req.body
+        const id = req.user.id
+        const user = await UserService.userUpdateProfile(id, fileImage, data);
+        ApiSuccess(res, true, "User updated successfully");
+    } catch (error) {
+        next(error)
+    }
 }
 
 exports.deleteUser = async (req, res, next) => {

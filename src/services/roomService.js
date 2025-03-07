@@ -1,8 +1,6 @@
 import ApiError from "~/utils/ApiError";
 import db from "../models/index";
 import { StatusCodes } from "http-status-codes";
-import { uploadImage } from "../utils/uploadImageUtil";
-import user from "~/models/user";
 import ImageService from './imageService'
 
 exports.updateRoom = async (id, file, data) => {
@@ -18,7 +16,7 @@ exports.updateRoom = async (id, file, data) => {
         if (filename) {
             await ImageService.deleteImage(filename)
         }
-        filename = await uploadImage(file)
+        filename = await ImageService.uploadImage(file)
     }
 
     //kiểm tra name đã tồn tại chưa
@@ -52,7 +50,7 @@ exports.createRoomService = async (file, data) => {
     let filename = null
     // upload image filebase
     if (file) {
-        filename = await uploadImage(file)
+        filename = await ImageService.uploadImage(file)
     }
     const newRoom = await db.Room.create({
         ...data,

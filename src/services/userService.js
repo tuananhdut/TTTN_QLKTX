@@ -5,7 +5,89 @@ import { hashPassword, comparePassword } from '../utils/passwordUtil.js'
 import jwt from 'jsonwebtoken'
 import { env } from '../config/environment.js';
 import clientRedis from '../config/redis.js'
+import ImageService from './imageService.js'
 
+exports.userUpdate = async (id, file, data) => {
+    const user = await db.User.findByPk(id)
+    if (!user) throw new ApiError(StatusCodes.NOT_FOUND, "user not found")
+
+    let filename = user.avatar
+    if (file) {
+        if (filename) {
+            await ImageService.deleteImage(filename)
+        }
+        filename = await ImageService.uploadImage(file)
+    }
+
+    if (data.phone) {
+        const phone = await db.User.findOne({
+            where: { phone: data.phone }
+        });
+        if (phone) throw new ApiError(StatusCodes.BAD_REQUEST, "Phone Number already exists")
+    }
+
+    if (data.email) {
+        const email = await db.User.findOne({
+            where: { email: data.email }
+        });
+        if (email) throw new ApiError(StatusCodes.BAD_REQUEST, "Email already exists")
+    }
+
+    if (data.citizen_id) {
+        const citizen_id = await db.User.findOne({
+            where: { citizen_id: data.citizen_id }
+        });
+        if (citizen_id) throw new ApiError(StatusCodes.BAD_REQUEST, "citizen already exists")
+    }
+
+    const updatedCount = await db.User.update({
+        phone: data.phone || user.phone,
+        fullname: data.fullname || user.fullname,
+        email: data.email || user.email,
+        birthdate: data.birthdate || user.birthdate,
+        citizen_id: data.citizen_id || user.citizen_id,
+        class: data.class || user.class,
+        avatar: filename,
+    },
+        {
+            where: { id: id }
+        }
+    )
+
+    return updatedCount
+}
+
+exports.userUpdateProfile = async (id, file, data) => {
+    const user = await db.User.findByPk(id)
+    if (!user) throw new ApiError(StatusCodes.NOT_FOUND, "user not found")
+
+    let filename = user.avatar
+    if (file) {
+        if (filename) {
+            await ImageService.deleteImage(filename)
+        }
+        filename = await ImageService.uploadImage(file)
+    }
+
+    if (data.phone) {
+        const phone = await db.User.findOne({
+            where: { phone: data.phone }
+        });
+        if (phone) throw new ApiError(StatusCodes.BAD_REQUEST, "Phone Number already exists")
+    }
+
+    const updatedCount = await db.User.update({
+        phone: data.phone || user.phone,
+        fullname: data.fullname || user.fullname,
+        avatar: filename,
+    },
+        {
+            where: { id: id }
+        }
+    )
+
+    return updatedCount
+}
 
 exports.createUser = async (data) => {
     // const user = await db.User.create({

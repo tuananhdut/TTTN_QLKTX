@@ -13,6 +13,6 @@ router.get('/', RoomController.getAllRooms)
 
 router.post('/', authMiddleware, authorize(["admin"]), upload.single("file"), RoomController.createRoom)
 
-router.put('/:id', upload.single("image"), RoomController.updateRoom)
+router.put('/:id', authMiddleware, authorize(["admin"]), upload.single("image"), RoomController.updateRoom)
 
 export default router
