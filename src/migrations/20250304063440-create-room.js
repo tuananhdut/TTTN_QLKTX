@@ -18,6 +18,11 @@ module.exports = {
         type: Sequelize.FLOAT,
         allowNull: false, // Giá phòng mỗi kỳ (4 tháng)
       },
+      current_people_count: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0, // Số người hiện tại trong phòng
+      },
       status: {
         type: Sequelize.ENUM("not_filled", "full", "maintenance"),
         allowNull: false,

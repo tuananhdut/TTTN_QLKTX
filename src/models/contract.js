@@ -40,6 +40,19 @@ module.exports = (sequelize, DataTypes) => {
         references: { model: "rooms", key: "id" },
         onDelete: "CASCADE",
       },
+      people_count: { // 🆕 Thêm số lượng người trong hợp đồng
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 1, // Mặc định là 1 người
+        validate: {
+          min: 1, // Ít nhất phải có 1 người
+        },
+      },
+      contract_type: { // 🆕 Thêm loại hợp đồng
+        type: DataTypes.ENUM("monthly", "quarterly"),
+        allowNull: false,
+        defaultValue: "quarterly", // Mặc định là hợp đồng ngắn hạn
+      },
       status: {
         type: DataTypes.ENUM("active", "expired", "canceled"),
         defaultValue: "active",

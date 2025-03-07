@@ -80,5 +80,22 @@ exports.getAll = async (page, limit) => {
     }
 }
 
+exports.getAllContractsByIdRoom = async (page, limit, roomId) => {
+    if (!roomId) throw new ApiError(StatusCodes.BAD_REQUEST, "Room ID is required")
+
+    let offset = (page - 1) * limit;
+
+    const { rows, count } = await db.Contract.findAndCountAll({
+        where: {
+            room_id: roomId,
+            status: "active"  // Chỉ lấy hợp đồng có trạng thái "active"
+        },
+        limit: limit,
+        offset: offset,
+        order: [["createdAt", "DESC"]] // Sắp xếp hợp đồng mới nhất trước
+    });
+
+    return { rows, count }
+}
 
 

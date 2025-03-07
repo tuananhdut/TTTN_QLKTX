@@ -31,6 +31,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 1, // Số người tối đa trong phòng
       },
+      current_people_count: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0, // Số người hiện tại trong phòng, mặc định là 0
+        validate: {
+          min: 0,
+        },
+      },
       price: {
         type: DataTypes.FLOAT,
         allowNull: false, // Giá phòng mỗi kỳ (4 tháng)

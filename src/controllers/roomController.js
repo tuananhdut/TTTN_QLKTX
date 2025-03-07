@@ -2,8 +2,21 @@ import RoomService from '../services/roomService'
 import ApiError from '~/utils/ApiError';
 import ApiSuccess from '~/utils/ApiSuccess';
 import { StatusCodes } from 'http-status-codes';
-import { getImage } from '../utils/getImageUtil'
 import ImageService from '../services/imageService'
+
+
+exports.getContractByIDroom = async (req, res, next) => {
+    try {
+        let page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit) || 8;
+        let room_id = parseInt(req.query.room_id)
+        const { rows, count } = await RoomService.getAllContractsByIdRoom(page, limit, room_id)
+        ApiSuccess(res, { page, limit, totalRecords: count, totalPages: Math.ceil(count / limit), data: rows }, "Rooms retrieved successfully");
+    } catch (error) {
+        next(error);
+    }
+};
+
 
 exports.updateRoom = async (req, res, next) => {
     try {
