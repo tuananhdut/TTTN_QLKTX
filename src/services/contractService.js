@@ -37,7 +37,7 @@ exports.createContract = async (start_date, end_date, room_id, users) => {
             }))
     );
 
-    // tạo mới contract
+    // tạo transaction để đồng bộ dữ liệu
     const transaction = await db.sequelize.transaction();
     try {
         // tạo mới contract

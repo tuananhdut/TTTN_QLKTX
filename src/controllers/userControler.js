@@ -5,7 +5,6 @@ import ApiError from "~/utils/ApiError";
 
 exports.updateAccountAdmin = async (req, res, next) => {
     try {
-        console.log(req.file)
         const fileImage = req.file
         const data = req.body
         const id = req.params.id

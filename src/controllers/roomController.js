@@ -4,12 +4,16 @@ import ApiSuccess from '~/utils/ApiSuccess';
 import { StatusCodes } from 'http-status-codes';
 import ImageService from '../services/imageService'
 
+exports.getUserByRoomID = async (req, res, next) => {
+
+}
 
 exports.getContractByIDroom = async (req, res, next) => {
     try {
         let page = parseInt(req.query.page) || 1;
         let limit = parseInt(req.query.limit) || 8;
-        let room_id = parseInt(req.query.room_id)
+        let room_id = parseInt(req.params.roomId)
+        console.log(room_id)
         const { rows, count } = await RoomService.getAllContractsByIdRoom(page, limit, room_id)
         ApiSuccess(res, { page, limit, totalRecords: count, totalPages: Math.ceil(count / limit), data: rows }, "Rooms retrieved successfully");
     } catch (error) {
