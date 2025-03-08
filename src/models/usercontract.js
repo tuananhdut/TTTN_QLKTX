@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // Liên kết với bảng User (một user có thể có nhiều hợp đồng)
       UserContract.belongsTo(models.User, {
-        foreignKey: "userId",
+        foreignKey: "user_id",
         as: "user",
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
 
       // Liên kết với bảng Contract (một hợp đồng có thể có nhiều user)
       UserContract.belongsTo(models.Contract, {
-        foreignKey: "contractId",
+        foreignKey: "contract_id",
         as: "contract",
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      userId: {
+      user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       },
-      contractId: {
+      contract_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {

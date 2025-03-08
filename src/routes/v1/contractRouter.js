@@ -7,7 +7,7 @@ const router = express.Router()
 
 // router.get('/',ContractControlle.getContractByStatus)
 
-router.post('/', authMiddleware, authorize(["admin"]), ContractControlle.createContract)
+router.post('/', ContractControlle.createContract)
 
 // router.put('/:id',ContractControlle.updateContract)
 

@@ -9,7 +9,7 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
-      userId: { // Liên kết với bảng users
+      user_id: { // Liên kết với bảng users
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -19,7 +19,7 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      contractId: {
+      contract_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {

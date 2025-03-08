@@ -8,16 +8,33 @@ import ContractService from '../services/contractService'
 
 exports.createContract = async (req, res, next) => {
     try {
-        const { start_date, end_date, room_id, people_count } = req.body;
-        console.log(req.body)
-
+        const { start_date, end_date, room_id } = req.body;
+        const users = req.body.users
         // Kiểm tra các trường bắt buộc
-        if (!start_date || !end_date || !room_id || !people_count) throw new ApiError(StatusCodes.BAD_REQUEST, "start_date, end_date, and room_id are required")
-        if (typeof people_count !== "number" || !Number.isInteger(people_count) || people_count < 1) {
-            throw new ApiError(StatusCodes.BAD_REQUEST, "people_count must be a positive integer");
+        if (!start_date || !end_date || !room_id) throw new ApiError(StatusCodes.BAD_REQUEST, "start_date, end_date, and room_id are required")
+
+        // kiểm tra users có dữ liệu không
+        if (!users || !Array.isArray(users) || users.length === 0) {
+            throw new ApiError(StatusCodes.BAD_REQUEST, "Invalid user list.");
         }
 
-        const newContract = await ContractService.createContract(start_date, end_date, room_id, people_count)
+        //kiểm tra trùng lặp trong request
+        const seen = {
+            email: new Set(),
+            phone: new Set(),
+            citizen_id: new Set(),
+        };
+
+        for (const user of users) {
+            for (const field of ["email", "phone", "citizen_id"]) {
+                if (seen[field].has(user[field])) {
+                    throw new Error(`Trùng lặp dữ liệu trong request: ${field} - ${user[field]}`);
+                }
+                seen[field].add(user[field]);
+            }
+        }
+
+        const newContract = await ContractService.createContract(start_date, end_date, room_id, users)
         ApiSuccess(res, newContract, "Contract is created successfully");
     } catch (error) {
         next(error)
