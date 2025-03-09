@@ -3,6 +3,37 @@ import db from "../models/index";
 import { StatusCodes } from "http-status-codes";
 import ImageService from './imageService'
 
+exports.getUsersByRoomId = async (roomId) => {
+    // Tìm các hợp đồng thuộc về phòng cụ thể
+    const contracts = await db.Contract.findAll({
+        where: {
+            room_id: roomId,
+            status: "active",
+        },
+        attributes: ["id"],
+    });
+
+    if (!contracts.length) {
+        return [];
+    }
+
+    const contractIds = contracts.map(contract => contract.id);
+
+    // Lấy danh sách người dùng thông qua bảng trung gian UserContract
+    const users = await db.User.findAll({
+        attributes: { exclude: ['password', 'role'] },
+        include: [
+            {
+                model: db.UserContract,
+                as: "userContracts",
+                where: { contract_id: contractIds }, // Chỉ lấy user thuộc các hợp đồng này
+                attributes: [], // Không cần lấy dữ liệu từ bảng UserContract
+            },
+        ],
+    });
+    return users;
+}
+
 exports.updateRoom = async (id, file, data) => {
     // kiểm tra id có tồn tại ?
     const room = await db.Room.findByPk(id)

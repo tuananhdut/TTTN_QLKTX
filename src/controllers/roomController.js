@@ -5,7 +5,9 @@ import { StatusCodes } from 'http-status-codes';
 import ImageService from '../services/imageService'
 
 exports.getUserByRoomID = async (req, res, next) => {
-
+    const roomId = req.params.roomId
+    const users = await RoomService.getUsersByRoomId(roomId)
+    ApiSuccess(res, users, "Users retrieved successfully")
 }
 
 exports.getContractByIDroom = async (req, res, next) => {
