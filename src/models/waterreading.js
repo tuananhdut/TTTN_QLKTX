@@ -38,7 +38,10 @@ module.exports = (sequelize, DataTypes) => {
         comment: "Chỉ số nước tháng này",
       },
       record_month: {
-        type: DataTypes.DATEONLY,
+        type: DataTypes.STRING(7),
+        validate: {
+          is: /^\d{4}-\d{2}$/ // Regex kiểm tra định dạng "YYYY-MM"
+        },
         allowNull: false,
         comment: "Tháng ghi nhận chỉ số (YYYY-MM)",
       },
@@ -64,7 +67,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "WaterReading",
       tableName: "waterReadings",
       timestamps: true, // Vì migration có createdAt, updatedAt
-      underscored: true, // Giữ nguyên kiểu đặt tên theo snake_case
+      underscored: false, // đổi thành false
     }
   );
 

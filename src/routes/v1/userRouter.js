@@ -19,4 +19,4 @@ router.delete('/:id', authMiddleware, authorize(["admin"]), deleteUser) // done
 
 router.put('/password', changePasssUser)
 
-export default router
+export default router;

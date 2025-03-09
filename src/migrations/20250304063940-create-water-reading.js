@@ -20,7 +20,7 @@ module.exports = {
         comment: "Chỉ số nước tháng này",
       },
       record_month: {
-        type: Sequelize.DATEONLY,
+        type: Sequelize.STRING(7),
         allowNull: false,
         comment: "Tháng ghi nhận chỉ số (YYYY-MM)",
       },
@@ -45,11 +45,16 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
+      // updatedAt: {
+      //   type: Sequelize.DATE,
+      //   allowNull: false,
+      //   defaultValue: Sequelize.literal("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"),
+      // },
       updatedAt: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"),
-      },
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"), 
+    },
     });
   },
   async down(queryInterface, Sequelize) {
