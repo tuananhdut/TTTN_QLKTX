@@ -11,6 +11,6 @@ router.get('/me', authMiddleware, authorize(["user", "admin"]), UserController.g
 router.patch('/me', authMiddleware, upload.single("avatar"), UserController.updateAccountUser) //done
 router.patch('/:id', authMiddleware, authorize(["admin"]), upload.single("avatar"), UserController.updateAccountAdmin)
 router.delete('/:id', authMiddleware, authorize(["admin"]), UserController.deleteUser) // done
-router.post('/me/change-password', UserController.changePasssUser)
+router.post('/me/change-password', authMiddleware, UserController.changePasssUser)
 
 export default router

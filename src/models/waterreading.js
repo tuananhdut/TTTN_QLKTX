@@ -64,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "WaterReading",
       tableName: "waterReadings",
       timestamps: true, // Vì migration có createdAt, updatedAt
-      underscored: true, // Giữ nguyên kiểu đặt tên theo snake_case
+      underscored: false, // Giữ nguyên kiểu đặt tên theo snake_case
     }
   );
 

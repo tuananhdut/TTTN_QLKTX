@@ -23,12 +23,18 @@ exports.createUser = async (req, res, next) => {
 }
 
 exports.changePasssUser = async (req, res, next) => {
-    const userId = req.user.id;
+    try {
+        const userId = req.user.id;
 
-    const { oldPassword, newPassword, confirmPassword } = req.body;
-
-    const result = await UserService.changePassword(userId, oldPassword, newPassword, confirmPassword);
-    ApiSuccess(res, null, "Password changed successfully")
+        const { oldPassword, newPassword, confirmPassword } = req.body;
+        if (newPassword !== confirmPassword) {
+            throw new ApiError(StatusCodes.BAD_REQUEST, "Confirmation password does not match")
+        }
+        const result = await UserService.changePassword(userId, oldPassword, newPassword);
+        ApiSuccess(res, null, "Password changed successfully")
+    } catch (error) {
+        next(error)
+    }
 }
 
 exports.getAllUsers = async (req, res, next) => {

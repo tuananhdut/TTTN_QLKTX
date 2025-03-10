@@ -95,20 +95,16 @@ exports.createUser = async (data) => {
     // })
 }
 
-exports.changePassword = async (userId, oldPassword, newPassword, confirmPassword) => {
-    // Kiểm tra xác nhận mật khẩu mới
-    if (newPassword !== confirmPassword) {
-        throw new ApiError(StatusCodes.BAD_REQUEST, "Confirm password does not match new password");
-    }
-
+exports.changePassword = async (userId, oldPassword, newPassword) => {
     // Tìm user trong database
     const user = await db.User.findByPk(userId);
     if (!user) {
         throw new ApiError(StatusCodes.NOT_FOUND, "User not found");
     }
 
+
     // Kiểm tra mật khẩu cũ
-    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    const isMatch = await comparePassword(oldPassword, user.password);
     if (!isMatch) {
         throw new ApiError(StatusCodes.UNAUTHORIZED, "Old password is incorrect");
     }
@@ -119,10 +115,9 @@ exports.changePassword = async (userId, oldPassword, newPassword, confirmPasswor
     }
 
     // Hash mật khẩu mới và cập nhật vào database
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const hashedPassword = await hashPassword(newPassword);
     user.password = hashedPassword;
     await user.save();
-
     return null
 };
 

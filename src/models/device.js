@@ -64,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Device",
       tableName: "devices",
       timestamps: true, // Vì migration có createdAt, updatedAt
-      underscored: true, // Để giữ nguyên kiểu đặt tên theo snake_case
+      underscored: false,
     }
   );
 
