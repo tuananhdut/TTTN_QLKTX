@@ -64,6 +64,7 @@ export const deleteUser = async (req, res, next) => {
 
 export const loginUser = async (req, res, next) => {
     try {
+        console.log("checkss")
         const { email, password } = req.body
 
         const user = await login(email, password)
