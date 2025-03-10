@@ -7,6 +7,31 @@ import { Op } from "sequelize"
 import { env } from "../config/environment.js"
 import { hashPassword } from "../utils/passwordUtil.js"
 
+exports.getUsersByContractId = async (idContract) => {
+    // Kiểm tra hợp đồng có tồn tại không
+    const contract = await db.Contract.findByPk(idContract);
+    if (!contract) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, "Contract not found!");
+    }
+
+    // Lấy danh sách người dùng thông qua bảng trung gian UserContract
+    const users = await db.User.findAll({
+        include: [
+            {
+                model: db.UserContract,
+                as: "userContracts",
+                where: { contract_id: idContract }, // Lọc theo hợp đồng
+                attributes: [], // Không lấy dữ liệu từ bảng UserContract
+            },
+        ],
+        attributes: { exclude: ["password", "role"] }, // Loại bỏ trường password
+    });
+
+    return users;
+
+};
+
+
 exports.createContract = async (start_date, end_date, room_id, users) => {
     let people_count = users.length
     const contract_type = (people_count === 1) ? "monthly" : "quarterly";

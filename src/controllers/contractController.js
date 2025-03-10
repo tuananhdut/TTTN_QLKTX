@@ -6,6 +6,16 @@ import { getImage } from '../utils/getImageUtil'
 import ImageService from '../services/imageService'
 import ContractService from '../services/contractService'
 
+exports.getUsersByContracId = async (req, res, next) => {
+    try {
+        const idContract = req.params.idContract;
+        const users = await ContractService.getUsersByContractId(idContract)
+        ApiSuccess(res, users, "")
+    } catch (error) {
+        next(error)
+    }
+}
+
 exports.createContract = async (req, res, next) => {
     try {
         const { start_date, end_date, room_id } = req.body;

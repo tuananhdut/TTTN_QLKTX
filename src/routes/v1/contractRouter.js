@@ -5,7 +5,7 @@ import ContractControlle from '../../controllers/contractController'
 
 const router = express.Router()
 
-// router.get('/',ContractControlle.getContractByStatus)
+router.get('/:idContract/users', ContractControlle.getUsersByContracId)
 
 router.post('/', authMiddleware, authorize(["admin"]), ContractControlle.createContract)
 
