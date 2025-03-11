@@ -21,8 +21,11 @@ module.exports = {
         comment: "ID của sinh viên",
       },
       bill_month: {
-        type: Sequelize.DATEONLY,
+        type: Sequelize.STRING(7), // Lưu theo định dạng "YYYY-MM"
         allowNull: false,
+        validate: {
+          is: /^\d{4}-(0[1-9]|1[0-2])$/, // Chỉ chấp nhận YYYY-MM với tháng từ 01-12
+        },
         comment: "Tháng lập hóa đơn (YYYY-MM)",
       },
       total_amount: {
@@ -57,6 +60,11 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"),
       },
+    });
+    await queryInterface.addConstraint('monthlyBills', {
+      fields: ['bill_month', 'room_id'],
+      type: 'unique',
+      name: 'unique_bill_month_room'
     });
   },
   async down(queryInterface, Sequelize) {

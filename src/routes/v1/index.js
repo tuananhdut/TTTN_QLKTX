@@ -7,6 +7,8 @@ import waterRoutes from './waterReadingRouter'
 import electricRoutes from './electricityReadingRouter'
 import deviceRoutes from './deviceRouter'
 import serviceRouter from './serviceRateRouter'
+import billRouter from './monthlyBillRouter'
+import billItemRouter from './billItemRouter'
 
 const router = express.Router()
 
@@ -17,6 +19,8 @@ router.use('/contracts', contractRouter)
 router.use('/waters', waterRoutes)
 router.use('/electric', electricRoutes)
 router.use('/devices', deviceRoutes)
-router.use('/services', serviceRouter)
+router.use('/service', serviceRouter)
+router.use('/bills', billRouter)
+router.use('/bill-iteam', billItemRouter)
 
 export default router

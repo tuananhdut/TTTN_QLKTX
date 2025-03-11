@@ -75,6 +75,14 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "billItems",
       timestamps: true, // Sequelize tự động quản lý createdAt & updatedAt
       underscored: true, // Giữ nguyên kiểu đặt tên theo snake_case
+      hooks: {
+        beforeSave: async (billItem, options) => {
+          const serviceRate = await sequelize.models.ServiceRate.findByPk(billItem.service_id);
+          if (serviceRate) {
+            billItem.price = (billItem.current_reading - billItem.previous_reading) * serviceRate.unit_price;
+          }
+        },
+      },
     }
   );
 

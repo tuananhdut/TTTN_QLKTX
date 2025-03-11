@@ -24,6 +24,13 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
+      // Hóa đơn có nhiều mục chi tiết (BillItem)
+      MonthlyBill.hasMany(models.BillItem, {
+        foreignKey: "bill_id",
+        as: "billItems",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
     }
   }
 
@@ -75,7 +82,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "MonthlyBill",
       tableName: "monthlyBills",
       timestamps: true, // Vì migration có createdAt, updatedAt
-      underscored: true, // Giữ nguyên kiểu đặt tên theo snake_case
+      underscored: false, // Giữ nguyên kiểu đặt tên theo snake_case
     }
   );
 
