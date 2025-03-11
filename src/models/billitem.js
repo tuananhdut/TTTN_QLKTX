@@ -1,20 +1,23 @@
-"use strict";
+'use strict';
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class BillItem extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // BillItem thuộc về một MonthlyBill
+      // Liên kết với bảng MonthlyBill
       BillItem.belongsTo(models.MonthlyBill, {
         foreignKey: "bill_id",
         as: "bill",
-        onDelete: "CASCADE",
         onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      });
+
+      // Liên kết với bảng ServiceRate
+      BillItem.belongsTo(models.ServiceRate, {
+        foreignKey: "service_id",
+        as: "service",
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       });
     }
   }
@@ -27,37 +30,50 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         allowNull: false,
       },
-      item_name: {
-        type: DataTypes.STRING,
+      bill_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
+        references: { model: "monthlyBills", key: "id" },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
-      quantity: {
+      service_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: { model: "service_rates", key: "id" },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
+      previous_reading: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      current_reading: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 1,
       },
-      unit_price: {
+      price: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
       },
-      total_price: {
-        type: DataTypes.DECIMAL(10, 2),
+      createdAt: {
+        type: DataTypes.DATE,
         allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
-      bill_id: {
-        type: DataTypes.INTEGER,
+      updatedAt: {
+        type: DataTypes.DATE,
         allowNull: false,
-        references: {
-          model: "monthlyBills",
-          key: "id",
-        },
+        defaultValue: DataTypes.NOW,
       },
     },
     {
       sequelize,
       modelName: "BillItem",
       tableName: "billItems",
-      timestamps: true, // Vì migration có createdAt, updatedAt
+      timestamps: true, // Sequelize tự động quản lý createdAt & updatedAt
       underscored: true, // Giữ nguyên kiểu đặt tên theo snake_case
     }
   );

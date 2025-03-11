@@ -9,23 +9,6 @@ module.exports = {
         primaryKey: true,
         allowNull: false,
       },
-      item_name: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      quantity: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 1,
-      },
-      unit_price: {
-        type: Sequelize.DECIMAL(10, 2),
-        allowNull: false,
-      },
-      total_price: {
-        type: Sequelize.DECIMAL(10, 2),
-        allowNull: false,
-      },
       bill_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -35,6 +18,30 @@ module.exports = {
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
+      },
+      service_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'service_rates', // Tham chiếu bảng service_rates
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
+      previous_reading: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0 // Mặc định là 0
+      },
+      current_reading: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 1 // Mặc định là 1
+      },
+      price: {
+        type: Sequelize.DECIMAL(10, 2),
+        allowNull: false
       },
       createdAt: {
         type: Sequelize.DATE,
