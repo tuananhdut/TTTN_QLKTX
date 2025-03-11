@@ -17,8 +17,8 @@ exports.getAllMonthlyBills = async (req, res, next) => {
 
 exports.createMonthlyBill = async (req, res, next) => {
     try {
-        const { bill_month, room_id } = req.body
-        const monthlyBill = await MonthlyBillService.createMonthlyBill()
+        const { bill_month, room_id, billItems } = req.body
+        const monthlyBill = await MonthlyBillService.createMonthlyBill(bill_month, room_id, billItems)
         ApiSuccess(res, monthlyBill, "")
     } catch (error) {
         next(error)

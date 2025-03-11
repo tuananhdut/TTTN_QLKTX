@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       student_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "users",
           key: "id",
@@ -52,8 +52,11 @@ module.exports = (sequelize, DataTypes) => {
         comment: "ID của sinh viên",
       },
       bill_month: {
-        type: DataTypes.DATEONLY,
+        type: DataTypes.STRING(7), // Chỉ lưu "YYYY-MM"
         allowNull: false,
+        validate: {
+          is: /^\d{4}-(0[1-9]|1[0-2])$/, // Định dạng YYYY-MM
+        },
         comment: "Tháng lập hóa đơn (YYYY-MM)",
       },
       total_amount: {

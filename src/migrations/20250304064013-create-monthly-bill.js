@@ -11,7 +11,7 @@ module.exports = {
       },
       student_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "users", // Giả định bảng sinh viên là "users"
           key: "id",

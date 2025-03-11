@@ -74,7 +74,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "BillItem",
       tableName: "billItems",
       timestamps: true, // Sequelize tự động quản lý createdAt & updatedAt
-      underscored: true, // Giữ nguyên kiểu đặt tên theo snake_case
+      underscored: false, // Giữ nguyên kiểu đặt tên theo snake_case
       hooks: {
         beforeSave: async (billItem, options) => {
           const serviceRate = await sequelize.models.ServiceRate.findByPk(billItem.service_id);
